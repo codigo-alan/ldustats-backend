@@ -37,8 +37,8 @@ class Session(models.Model):
     name = models.CharField(max_length=200)
     date = models.DateField()
     distance = models.DecimalField(max_digits=4, decimal_places=2)
-    idPlayer = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
-    idFile = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
+    idPlayer = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, to_field='id')
+    idFile = models.ForeignKey(File, on_delete=models.CASCADE, null=True, to_field='id')
 
     def __str__(self):
         return f"{self.name}, {self.date}, {self.distance}, {self.idPlayer}, {self.idFile}"
