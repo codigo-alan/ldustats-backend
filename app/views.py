@@ -1,7 +1,4 @@
 from rest_framework import viewsets
-
-from rest_framework.response import Response
-import csv
 from .serializer import PlayerSerializer, SessionSerializer
 from .models import Player, Session
 

@@ -15,4 +15,4 @@ class Session(models.Model):
     distance = models.DecimalField(max_digits=4, decimal_places=2)
 
     def __str__(self):
-        return f"{self.date}, {self.player}"
+        return f"{self.date}, {self.name}, {self.distance}"
