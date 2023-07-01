@@ -23,3 +23,11 @@ class SessionByPlayerView(viewsets.ModelViewSet):
         idParam = self.kwargs['id']
         queryset = Session.objects.all().filter(idPlayer= idParam)
         return queryset
+    
+class SessionByFileView(viewsets.ModelViewSet):
+    serializer_class = SessionSerializer
+    
+    def get_queryset(self):
+        idParam = self.kwargs['id']
+        queryset = Session.objects.all().filter(idFile= idParam)
+        return queryset
