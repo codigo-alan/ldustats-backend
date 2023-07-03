@@ -12,7 +12,7 @@ class Player(models.Model):
         return self.id
     
 class File(models.Model):
-    id = models.CharField(max_length=20, primary_key=True)
+    #id = models.CharField(max_length=20, primary_key=True)
     date = models.DateField()
 
     def __str__(self):
