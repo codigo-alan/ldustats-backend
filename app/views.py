@@ -14,15 +14,8 @@ class PlayerView(viewsets.ModelViewSet):
 class FileView(viewsets.ModelViewSet):
     serializer_class = FileSerializer
     queryset = File.objects.all()
-    """ def get_queryset(self):
-        ids = self.request.query_params.get('ids', None)
-        if ids != None:
-            ids = ids.split(',')
-            queryset = File.objects.all().filter(id__in=ids)
-            return queryset
-        else:
-            return File.objects.all() """
 
+#TODO may be put here the get_query_set of SessionByFileAndPlayerView and delete these class
 class SessionView(viewsets.ModelViewSet):
     serializer_class = SessionSerializer
     queryset = Session.objects.all()
@@ -52,3 +45,20 @@ class FilesByIdsView(viewsets.ModelViewSet):
         #ids = [ int(x) for x in ids.split(',') ] #converts each id in the list, to an int
         queryset = File.objects.all().filter(id__in=ids)
         return queryset
+    
+class SessionByFileAndPlayerView(viewsets.ModelViewSet):
+    serializer_class = SessionSerializer
+
+    def get_queryset(self):
+        idPlayerParam = self.request.query_params.get('idplayer', None)
+        idFileParam = self.request.query_params.get('idfile', None)
+        if idPlayerParam != None and idFileParam != None:
+            queryset = Session.objects.all().filter(idPlayer= idPlayerParam, idFile= idFileParam)
+            return queryset
+        elif idPlayerParam == None and idFileParam != None:
+            return Session.objects.all().filter(idFile= idFileParam)
+        elif idPlayerParam != None and idFileParam == None:
+            return Session.objects.all().filter(idPlayer= idPlayerParam)
+        else:
+            return Session.objects.all()
+    
