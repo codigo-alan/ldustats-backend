@@ -21,9 +21,26 @@ class File(models.Model):
 class Session(models.Model):
     name = models.CharField(max_length=200)
     date = models.DateField()
-    distance = models.DecimalField(max_digits=4, decimal_places=2)
+    drillTitle = models.CharField(max_length=100, null=True)
+    totalTime = models.CharField(max_length=100, null=True)
+    totalDistance = models.DecimalField(max_digits=7, decimal_places=2, null=True)
+    dtMin = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    zone4 = models.DecimalField(max_digits=6, decimal_places=2, null=True)
+    zone5 = models.DecimalField(max_digits=6, decimal_places=2, null=True)
+    zone6 = models.DecimalField(max_digits=6, decimal_places=2, null=True)
+    hsr = models.DecimalField(max_digits=6, decimal_places=2, null=True)
+    hsrMin = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    maxSpeed = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    spints = models.IntegerField(max_length=2, null=True)
+    sprintDistance = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    accelerations = models.IntegerField(max_length=2, null=True)
+    decelerations = models.IntegerField(max_length=2, null=True)
+    accMin = models.DecimalField(max_digits=3, decimal_places=2, null=True)
+    decMin = models.DecimalField(max_digits=3, decimal_places=2, null=True)
+    hmlDistance = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     idPlayer = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
     idFile = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
 
+
     def __str__(self):
-        return f"{self.name}, {self.date}, {self.distance}, {self.idPlayer}, {self.idFile}"
+        return f"{self.name}, {self.date}, {self.idPlayer}, {self.idFile}"

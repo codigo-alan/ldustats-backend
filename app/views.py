@@ -25,7 +25,7 @@ class SessionByPlayerView(viewsets.ModelViewSet):
     
     def get_queryset(self):
         idParam = self.kwargs['id']
-        queryset = Session.objects.all().filter(idPlayer= idParam).order_by('distance')
+        queryset = Session.objects.all().filter(idPlayer= idParam).order_by('date')
         return queryset
     
 class SessionByFileView(viewsets.ModelViewSet):
