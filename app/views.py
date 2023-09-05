@@ -1,7 +1,11 @@
 from rest_framework import viewsets
-from .serializer import PlayerSerializer, SessionSerializer, FileSerializer
+from .serializer import PlayerSerializer, SessionSerializer, FileSerializer, UserSerializer
 from .models import Player, Session, File
 import logging
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
 logger = logging.getLogger(__name__)
 
@@ -66,3 +70,26 @@ class SessionView(viewsets.ModelViewSet):
             return Session.objects.all()
 
     
+class RegisterUserView(viewsets.ViewSet):
+    #permission_classes = [AllowAny]  # Allow access without authentication
+
+    def post(self):
+        # obtain the data from the request
+        username = self.request.query_params.get('username', None)
+        email = self.request.query_params.get('email', None)
+        password = self.request.query_params.get('password', None)
+        
+
+        # Validate data
+
+        if not username or not email or not password:
+            return Response({"mensaje": "Todos los campos son obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create new user in db
+        try:
+            user = User.objects.create_user(username=username, email=email, password=password)
+            user.save()
+            #TODO here is neccessary make a LOGIN of the recently added User
+            return Response({"mensaje": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"mensaje": "Error al registrar el usuario"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

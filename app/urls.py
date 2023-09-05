@@ -9,6 +9,7 @@ router.register(r'sessions', views.SessionView, 'sessions')
 router.register(r'files', views.FileView, 'files') 
 router.register(r'players/(?P<id>\w+)/sessions', views.SessionByPlayerView, 'sessions') #verify 3rd param (basename)
 router.register(r'files-filters', views.FilesByIdsView, 'files')
+router.register(r'register', views.RegisterUserView, 'register')
 
 urlpatterns = [ 
     path("api/v1/", include(router.urls))

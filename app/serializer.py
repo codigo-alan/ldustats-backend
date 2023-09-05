@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Player, File, Session
+from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 
 class PlayerSerializer(serializers.ModelSerializer):
     #sessions = serializers.PrimaryKeyRelatedField(many=True, queryset=Session.objects.all())
@@ -19,3 +21,18 @@ class SessionSerializer(serializers.ModelSerializer):
         model = Session
         fields = '__all__'
         #fields = ('id', 'name', 'playerId') # fields of model to serialize, id and name in this case
+
+
+class UserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        required=True)
+    password = serializers.CharField(
+        min_length=8)
+    
+    """ def validate_password(self, value):
+        return make_password(value) """
+
+    class Meta:
+        model = get_user_model() #get user model obtains the model default of User from Django
+        #fields = ('username', 'password')
+        fields = '__all__'
