@@ -37,10 +37,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #External imports
     'rest_framework',
     'corsheaders', # to allow cors. Enable call from a client (ip : port) to the backend (other ip : other port)
+    'rest_framework_simplejwt', #To auth token
+    #My custom app, this is my created app with my views, etc.
     'app',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
