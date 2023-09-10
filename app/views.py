@@ -11,10 +11,12 @@ logger = logging.getLogger(__name__)
 
 # Create your views here.
 class PlayerView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     serializer_class = PlayerSerializer
     queryset = Player.objects.all()
 
 class FileView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     serializer_class = FileSerializer
     queryset = File.objects.all()
 
