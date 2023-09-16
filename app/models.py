@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Player(models.Model):
-    id = models.CharField(max_length=20, primary_key=True)
+    ref = models.CharField(max_length=20)
     name = models.CharField(max_length=200)
     birth = models.DateField()
     position = models.CharField(max_length=200)
@@ -38,7 +38,7 @@ class Session(models.Model):
     accMin = models.DecimalField(max_digits=3, decimal_places=2, null=True)
     decMin = models.DecimalField(max_digits=3, decimal_places=2, null=True)
     hmlDistance = models.DecimalField(max_digits=6, decimal_places=2, null=True)
-    idPlayer = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
+    idPlayer = models.ForeignKey(Player, on_delete=models.CASCADE, null=True) #TODO without foreign key, only a varchar
     idFile = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
 
 
