@@ -1,11 +1,12 @@
 from rest_framework import viewsets
-from .serializer import PlayerSerializer, SessionSerializer, FileSerializer, UserSerializer
+from .serializer import PlayerSerializer, SessionSerializer, FileSerializer
 from .models import Player, Session, File
 import logging
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+
 
 logger = logging.getLogger(__name__)
 
@@ -20,24 +21,17 @@ class FileView(viewsets.ModelViewSet):
     serializer_class = FileSerializer
     queryset = File.objects.all()
 
-
 class SessionByPlayerView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     serializer_class = SessionSerializer
     
     def get_queryset(self):
         idParam = self.kwargs['id']
-        queryset = Session.objects.all().filter(idPlayer= idParam).order_by('date')
-        return queryset
-    
-class SessionByFileView(viewsets.ModelViewSet):
-    serializer_class = SessionSerializer
-    
-    def get_queryset(self):
-        idParam = self.kwargs['id']
-        queryset = Session.objects.all().filter(idFile= idParam)
+        queryset = Session.objects.filter(idPlayer= idParam).order_by('date')
         return queryset
     
 class FilesByIdsView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     serializer_class = FileSerializer
 
     def get_queryset(self):
@@ -53,9 +47,9 @@ class FilesByIdsView(viewsets.ModelViewSet):
         queryset = File.objects.filter(id__in=ids)
         
         return queryset
-
-    
+  
 class SessionView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     serializer_class = SessionSerializer
 
     def get_queryset(self):
@@ -71,7 +65,6 @@ class SessionView(viewsets.ModelViewSet):
         else:
             return Session.objects.all()
 
-    
 class RegisterUserView(viewsets.ViewSet):
     #permission_classes = [AllowAny]  # Allow access without authentication
 
