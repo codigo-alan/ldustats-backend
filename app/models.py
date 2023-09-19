@@ -31,14 +31,15 @@ class Session(models.Model):
     hsr = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     hsrMin = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     maxSpeed = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    spints = models.IntegerField(max_length=2, null=True)
+    spints = models.IntegerField(null=True)
     sprintDistance = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    accelerations = models.IntegerField(max_length=2, null=True)
-    decelerations = models.IntegerField(max_length=2, null=True)
+    accelerations = models.IntegerField(null=True)
+    decelerations = models.IntegerField(null=True)
     accMin = models.DecimalField(max_digits=3, decimal_places=2, null=True)
     decMin = models.DecimalField(max_digits=3, decimal_places=2, null=True)
     hmlDistance = models.DecimalField(max_digits=6, decimal_places=2, null=True)
-    idPlayer = models.ForeignKey(Player, on_delete=models.CASCADE, null=True) #TODO without foreign key, only a varchar
+    #idPlayer = models.ForeignKey(Player, on_delete=models.CASCADE, null=True) #TODO without foreign key, only a varchar
+    idPlayer = models.CharField(max_length=20)
     idFile = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
 
 
