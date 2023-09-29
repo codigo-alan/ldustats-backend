@@ -11,19 +11,24 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+#Load enviroment variables from .env file
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hsi0((c5o4vm(4mzfis6vzb%#ioe(0js(=_slw&ev5%-sbc#4p'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') 
 
 ALLOWED_HOSTS = []
 
@@ -90,11 +95,11 @@ DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'ldu',
+        'NAME': os.getenv('DB_NAME'),
 
-        'USER': 'ldu',
+        'USER': os.getenv('DB_USER'),
 
-        'PASSWORD': 'ldu',
+        'PASSWORD': os.getenv('DB_PASSWORD'),
 
         'HOST': '127.0.0.1',
 
@@ -153,7 +158,7 @@ CORS_ALLOWED_ORIGINS = [
 
 # Log console while debug Runserver
 
-import os
+#import os
 
 LOGGING = {
     'version': 1,
