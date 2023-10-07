@@ -101,9 +101,9 @@ DATABASES = {
 
         'PASSWORD': os.getenv('DB_PASSWORD'),
 
-        'HOST': '127.0.0.1',
+        'HOST': 'containers-us-west-146.railway.app',
 
-        'PORT': '5432',
+        'PORT': '6302',
     }
 
 }

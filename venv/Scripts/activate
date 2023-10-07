@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\alanf\Documents\Programacion\LDUStats\ldustatsbackend\venv"
+VIRTUAL_ENV="C:\Users\alanf\Documents\Programacion\LDUStats\ldustatsback-v3\ldustats-backend\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
