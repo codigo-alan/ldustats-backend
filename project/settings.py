@@ -156,9 +156,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'https://ldustats.netlify.app',
+    'https://www.ldustats.netlify.app',
 ]
 CSRF_TRUSTED_ORIGINS = [
     'https://ldustats.netlify.app',
+    'https://www.ldustats.netlify.app',
     #'https://ldustats-backend-production.up.railway.app'
 ]
 
