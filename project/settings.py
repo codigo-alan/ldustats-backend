@@ -161,7 +161,6 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     'https://ldustats.netlify.app',
     'https://www.ldustats.netlify.app',
-    #'https://ldustats-backend-production.up.railway.app'
 ]
 
 # Log console while debug Runserver
