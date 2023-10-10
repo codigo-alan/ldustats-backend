@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -101,9 +101,9 @@ DATABASES = {
 
         'PASSWORD': os.getenv('DB_PASSWORD'),
 
-        'HOST': 'containers-us-west-146.railway.app',
+        'HOST': '127.0.0.1',
 
-        'PORT': '6302',
+        'PORT': '5432',
     }
 
 }
