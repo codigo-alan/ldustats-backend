@@ -101,7 +101,7 @@ DATABASES = {
 
         'PASSWORD': os.getenv('DB_PASSWORD'),
 
-        'HOST': '127.0.0.1',
+        'HOST': 'host.docker.internal', #Indicates that db is allowed on localhost of the phisical machine
 
         'PORT': '5432',
     }
