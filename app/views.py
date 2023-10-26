@@ -67,7 +67,7 @@ class SessionView(viewsets.ModelViewSet):
             return Session.objects.all()
 
 class RegisterUserView(viewsets.ViewSet):
-    #permission_classes = [AllowAny]  # Allow access without authentication
+    permission_classes = [IsAdminUser]  # Allow access without authentication
 
     def post(self):
         # obtain the data from the request

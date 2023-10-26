@@ -9,7 +9,7 @@ class Player(models.Model):
     position = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.id
+        return f"{self.id}"
     
 class File(models.Model):
     #id = models.CharField(max_length=20, primary_key=True)
