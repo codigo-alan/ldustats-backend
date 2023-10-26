@@ -1,7 +1,18 @@
 from rest_framework import serializers
 from .models import Player, File, Session
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class CustomObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        #Extra data to the response
+        data['username'] = self.user.get_username()
+        data['isStaff'] = self.user.is_staff
+        data['isSuperuser'] = self.user.is_superuser
+        return data
+    
 
 class PlayerSerializer(serializers.ModelSerializer):
     #sessions = serializers.PrimaryKeyRelatedField(many=True, queryset=Session.objects.all())

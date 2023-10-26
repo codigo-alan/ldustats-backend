@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework_simplejwt import views as jwt_views
+from app.views import CustomTokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ldustats/', include('app.urls')),
-    path('api/token/', jwt_views.token_obtain_pair, name='token_obtain_pair'), # with POST return a response with token
+    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'), # with POST return a response with token
     path('api/token/refresh/', jwt_views.token_refresh, name='token_refresh'), # with POST return a response to refresh token
 ]

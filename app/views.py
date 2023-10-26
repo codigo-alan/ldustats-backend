@@ -1,11 +1,12 @@
 from rest_framework import viewsets
-from .serializer import PlayerSerializer, SessionSerializer, FileSerializer
+from .serializer import PlayerSerializer, SessionSerializer, FileSerializer, CustomObtainPairSerializer
 from .models import Player, Session, File
 import logging
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 logger = logging.getLogger(__name__)
@@ -88,3 +89,7 @@ class RegisterUserView(viewsets.ViewSet):
             return Response({"mensaje": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({"mensaje": "Error al registrar el usuario"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    permission_classes = [AllowAny]
+    serializer_class = CustomObtainPairSerializer
