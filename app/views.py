@@ -65,6 +65,17 @@ class SessionView(viewsets.ModelViewSet):
             return Session.objects.filter(idPlayer= idPlayerParam)
         else:
             return Session.objects.all()
+        
+class SessionIntervalsView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = SessionSerializer
+
+    def get_queryset(self):
+        nameParam = self.request.query_params.get('playerName')
+        initDateParam = self.request.query_params.get('initDate')
+        endDateParam = self.request.query_params.get('endDate')
+        
+        return Session.objects.filter(name=nameParam)
 
 class RegisterUserView(viewsets.ViewSet):
     permission_classes = [IsAdminUser]  # Allow access without authentication
