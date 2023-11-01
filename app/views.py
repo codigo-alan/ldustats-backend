@@ -74,8 +74,7 @@ class SessionIntervalsView(viewsets.ModelViewSet):
         nameParam = self.request.query_params.get('playerName')
         initDateParam = self.request.query_params.get('initDate')
         endDateParam = self.request.query_params.get('endDate')
-        
-        return Session.objects.filter(name=nameParam)
+        return Session.objects.filter(name=nameParam, date__gte= initDateParam, date__lte= endDateParam).order_by('date')
 
 class RegisterUserView(viewsets.ViewSet):
     permission_classes = [IsAdminUser]  # Allow access without authentication
