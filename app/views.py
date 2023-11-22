@@ -20,7 +20,7 @@ class PlayerView(viewsets.ModelViewSet):
 class FileView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = FileSerializer
-    queryset = File.objects.all()
+    queryset = File.objects.all().order_by('-date')
 
 class SessionByPlayerView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -45,7 +45,7 @@ class FilesByIdsView(viewsets.ModelViewSet):
         else:
             ids = []
 
-        queryset = File.objects.filter(id__in=ids)
+        queryset = File.objects.filter(id__in=ids).order_by('-date')
         
         return queryset
   
