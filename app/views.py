@@ -7,7 +7,7 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from django.db import models
 
 logger = logging.getLogger(__name__)
 
@@ -103,3 +103,11 @@ class RegisterUserView(viewsets.ViewSet):
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = [AllowAny]
     serializer_class = CustomObtainPairSerializer
+
+class HistoricalInfoView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = SessionSerializer
+
+    def get_queryset(self):
+        idParam = self.request.query_params.get('idParam')
+        return Session.objects.filter(idPlayer=idParam, ).aggregate(max_vel=models.Max('maxSpeed'))['max_vel']
