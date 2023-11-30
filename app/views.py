@@ -112,6 +112,26 @@ class HistoricalInfoView(APIView):
         refParam = self.request.query_params.get('refParam', None)
         
         if refParam is not None:
-            maxSpeedPlayer = Session.objects.filter(idPlayer=refParam).aggregate(max_vel=models.Max('maxSpeed'))['max_vel']
-            return Response({"maxSpeed": f"{maxSpeedPlayer} m/s", "message": "mensaje"}, status=status.HTTP_200_OK)
+            sessionsFiltered = Session.objects.filter(idPlayer=refParam)
+
+            maxSpeedPlayer = round(sessionsFiltered.aggregate(max_vel=models.Max('maxSpeed'))['max_vel'], 2)
+
+            maxDistancePlayer = round(sessionsFiltered.aggregate(max_dis=models.Max('totalDistance'))['max_dis'], 2)
+
+            maxSprintsPlayer = sessionsFiltered.aggregate(max_sprints=models.Max('spints'))['max_sprints']
+
+            maxSprintsDistancePlayer = round(sessionsFiltered.aggregate(max_sprints_distance=models.Max('sprintDistance'))['max_sprints_distance'], 2)
+
+            maxAcc = sessionsFiltered.aggregate(max_acc=models.Max('accelerations'))['max_acc']
+
+            maxDec = sessionsFiltered.aggregate(max_dec=models.Max('decelerations'))['max_dec']
+
+            return Response(
+                {"maxSpeed": f"{maxSpeedPlayer} km/h", 
+                 "totalDistance": f"{maxDistancePlayer} m", 
+                 "sprints": f"{maxSprintsPlayer}", 
+                 "sprintsDistance": f"{maxSprintsDistancePlayer} m",
+                 "maxAcc": f"{maxAcc}",
+                 "maxDec": f"{maxDec}"}, status=status.HTTP_200_OK)
+        
         else: return Response({"message": f"GET request SIN parámetro {refParam}"}, status=status.HTTP_400_OK)
