@@ -4,6 +4,7 @@ from .models import Player, Session, File
 import logging
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -76,7 +77,7 @@ class SessionIntervalsView(viewsets.ModelViewSet):
         endDateParam = self.request.query_params.get('endDate')
         return Session.objects.filter(name__iexact=nameParam, date__gte= initDateParam, date__lte= endDateParam).order_by('date')
 
-class RegisterUserView(viewsets.ViewSet):
+class RegisterUserView(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]  # Allow access without authentication
 
     def post(self):
@@ -104,10 +105,13 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = [AllowAny]
     serializer_class = CustomObtainPairSerializer
 
-class HistoricalInfoView(viewsets.ModelViewSet):
+class HistoricalInfoView(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = SessionSerializer
 
-    def get_queryset(self):
-        idParam = self.request.query_params.get('idParam')
-        return Session.objects.filter(idPlayer=idParam, ).aggregate(max_vel=models.Max('maxSpeed'))['max_vel']
+    def get(self, request):
+        refParam = self.request.query_params.get('refParam', None)
+        
+        if refParam is not None:
+            maxSpeedPlayer = Session.objects.filter(idPlayer=refParam).aggregate(max_vel=models.Max('maxSpeed'))['max_vel']
+            return Response({"maxSpeed": f"{maxSpeedPlayer} m/s", "message": "mensaje"}, status=status.HTTP_200_OK)
+        else: return Response({"message": f"GET request SIN parámetro {refParam}"}, status=status.HTTP_400_OK)
