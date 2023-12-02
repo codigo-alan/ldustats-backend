@@ -112,6 +112,7 @@ class HistoricalInfoView(APIView):
         refParam = self.request.query_params.get('refParam', None)
         
         if refParam is not None:
+            #TODO add try catch of data from db
             sessionsFiltered = Session.objects.filter(idPlayer=refParam)
 
             maxSpeedPlayer = round(sessionsFiltered.aggregate(max_vel=models.Max('maxSpeed'))['max_vel'], 2)
