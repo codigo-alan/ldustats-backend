@@ -11,7 +11,9 @@ router.register(r'players/(?P<id>\w+)/sessions', views.SessionByPlayerView, 'ses
 router.register(r'files-filters', views.FilesByIdsView, 'files')
 router.register(r'register', views.RegisterUserView, 'register') #not works properly
 router.register(r'sessions-intervals', views.SessionIntervalsView, 'sessions') 
+#router.register(r'players/historical-info', views.HistoricalInfoView, 'sessions')
 
 urlpatterns = [ 
-    path("api/v1/", include(router.urls))
+    path("api/v1/", include(router.urls)),
+    path("api/v1/historical-info", views.HistoricalInfoView.as_view(), name='historical-info')
 ]

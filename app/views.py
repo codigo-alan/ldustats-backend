@@ -4,10 +4,11 @@ from .models import Player, Session, File
 import logging
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from django.db import models
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ class PlayerView(viewsets.ModelViewSet):
 class FileView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = FileSerializer
-    queryset = File.objects.all()
+    queryset = File.objects.all().order_by('-date')
 
 class SessionByPlayerView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -45,7 +46,7 @@ class FilesByIdsView(viewsets.ModelViewSet):
         else:
             ids = []
 
-        queryset = File.objects.filter(id__in=ids)
+        queryset = File.objects.filter(id__in=ids).order_by('-date')
         
         return queryset
   
@@ -74,9 +75,9 @@ class SessionIntervalsView(viewsets.ModelViewSet):
         nameParam = self.request.query_params.get('playerName')
         initDateParam = self.request.query_params.get('initDate')
         endDateParam = self.request.query_params.get('endDate')
-        return Session.objects.filter(name=nameParam, date__gte= initDateParam, date__lte= endDateParam).order_by('date')
+        return Session.objects.filter(name__iexact=nameParam, date__gte= initDateParam, date__lte= endDateParam).order_by('date')
 
-class RegisterUserView(viewsets.ViewSet):
+class RegisterUserView(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]  # Allow access without authentication
 
     def post(self):
@@ -103,3 +104,38 @@ class RegisterUserView(viewsets.ViewSet):
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = [AllowAny]
     serializer_class = CustomObtainPairSerializer
+
+class HistoricalInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        refParam = self.request.query_params.get('refParam', None)
+        
+        if refParam is not None:
+            try:
+                sessionsFiltered = Session.objects.filter(idPlayer=refParam)
+
+                maxSpeedPlayer = round(sessionsFiltered.aggregate(max_vel=models.Max('maxSpeed'))['max_vel'], 2)
+
+                maxDistancePlayer = round(sessionsFiltered.aggregate(max_dis=models.Max('totalDistance'))['max_dis'], 2)
+
+                maxSprintsPlayer = sessionsFiltered.aggregate(max_sprints=models.Max('spints'))['max_sprints']
+
+                maxSprintsDistancePlayer = round(sessionsFiltered.aggregate(max_sprints_distance=models.Max('sprintDistance'))['max_sprints_distance'], 2)
+
+                maxAcc = sessionsFiltered.aggregate(max_acc=models.Max('accelerations'))['max_acc']
+
+                maxDec = sessionsFiltered.aggregate(max_dec=models.Max('decelerations'))['max_dec']
+
+            except:
+                return Response({"message": f"Player without sessions"}, status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(
+                {"maxSpeed": f"{maxSpeedPlayer} km/h", 
+                 "totalDistance": f"{maxDistancePlayer} m", 
+                 "sprints": f"{maxSprintsPlayer}", 
+                 "sprintsDistance": f"{maxSprintsDistancePlayer} m",
+                 "maxAcc": f"{maxAcc}",
+                 "maxDec": f"{maxDec}"}, status=status.HTTP_200_OK)
+            
+        else: return Response({"message": f"GET request SIN parámetro {refParam}"}, status=status.HTTP_400_BAD_REQUEST)
