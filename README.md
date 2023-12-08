@@ -32,10 +32,10 @@ The project is structured as follows:
 &nbsp;&nbsp;📁 project  
 &nbsp;&nbsp;&nbsp;&nbsp;📄 settings.py -> Main configuration file of the project  
 &nbsp;&nbsp;&nbsp;&nbsp;📄 urls.py -> To define the URL of the project  
-&nbsp;&nbsp;&nbsp;&nbsp;📄 asgi.py -> To define the Asynchronous Server Gateway Interface
-&nbsp;&nbsp;&nbsp;&nbsp;📄 wsgi.py -> To define the Web Server Gateway Interface
-&nbsp;&nbsp;🐍 manage.py -> Manage scripts of the project
-&nbsp;&nbsp;📄 requirements.txt -> List of dependencies of project
+&nbsp;&nbsp;&nbsp;&nbsp;📄 asgi.py -> To define the Asynchronous Server Gateway Interface  
+&nbsp;&nbsp;&nbsp;&nbsp;📄 wsgi.py -> To define the Web Server Gateway Interface  
+&nbsp;&nbsp;🐍 manage.py -> Manage scripts of the project  
+&nbsp;&nbsp;📄 requirements.txt -> List of dependencies of project  
 
 ## Technologies
 
