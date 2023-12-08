@@ -42,3 +42,7 @@ The project is structured as follows:
 * Django and Django Rest Framework for the server side ⚙️
 * Vite with React JavaScript for the client side 👉👉 [ldustats-frontend](https://github.com/codigo-alan/ldustats-frontend) 🌐
 * PostgreSQL 🗄️
+
+## Host information
+
+This Django project and the PostgreSQL database are hosted on Railway
