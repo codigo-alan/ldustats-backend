@@ -12,11 +12,15 @@ from django.db import models
 
 logger = logging.getLogger(__name__)
 
-# Create your views here.
 class PlayerView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = PlayerSerializer
-    queryset = Player.objects.all()
+
+    def get_queryset(self):
+        #TODO add try except
+        teamParam = self.request.query_params.get('teamParam') 
+        queryset = Player.objects.filter(team= teamParam).order_by('name')
+        return queryset
 
 class FileView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
