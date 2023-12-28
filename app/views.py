@@ -13,6 +13,7 @@ from django.db import models
 logger = logging.getLogger(__name__)
 
 class PlayerView(viewsets.ModelViewSet):
+    #TODO add function to view a player by Id or create new view
     permission_classes = [IsAuthenticated]
     serializer_class = PlayerSerializer
 
