@@ -13,15 +13,46 @@ from django.db import models
 logger = logging.getLogger(__name__)
 
 class PlayerView(viewsets.ModelViewSet):
-    #TODO add function to view a player by Id or create new view
+    #TODO override update and delete
     permission_classes = [IsAuthenticated]
     serializer_class = PlayerSerializer
 
     def get_queryset(self):
-        #TODO add try except
+        #print(self.action)
         teamParam = self.request.query_params.get('teamParam') 
         queryset = Player.objects.filter(team= teamParam).order_by('name')
         return queryset
+   
+    def retrieve(self, request, pk=None):
+        try:
+            instance = Player.objects.get(pk=pk)
+            serializer = self.serializer_class(instance)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Player.DoesNotExist:
+            return Response({'detail': 'Player not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+    def destroy(self, request, pk=None):
+        try:
+            instance = Player.objects.get(pk=pk)
+            instance.delete()
+            return Response({'detail': 'Player deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+        except Player.DoesNotExist:
+            return Response({'detail': 'Player not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    def update(self, request, pk=None):
+        try:
+            request.data["team"] = request.data["team"].lower() # convert to lower the team
+            instance = Player.objects.get(pk=pk)
+            serializer = self.serializer_class(instance, data=request.data, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+        except Player.DoesNotExist:
+            return Response({'detail': 'Player not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 class FileView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
