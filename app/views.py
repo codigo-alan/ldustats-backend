@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .serializer import PlayerSerializer, SessionSerializer, FileSerializer, CustomObtainPairSerializer
-from .models import Player, Session, File
+from .serializer import TeamSerializer, PlayerSerializer, SessionSerializer, FileSerializer, CustomObtainPairSerializer
+from .models import Team, Player, Session, File
 import logging
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,8 +12,12 @@ from django.db import models
 
 logger = logging.getLogger(__name__)
 
+class TeamView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TeamSerializer
+    queryset = Team.objects.all().order_by('name')
+
 class PlayerView(viewsets.ModelViewSet):
-    #TODO override update and delete
     permission_classes = [IsAuthenticated]
     serializer_class = PlayerSerializer
 
@@ -41,7 +45,7 @@ class PlayerView(viewsets.ModelViewSet):
 
     def update(self, request, pk=None):
         try:
-            request.data["team"] = request.data["team"].lower() # convert to lower the team
+            #request.data["team"] = request.data["team"].lower() # convert to lower the team
             instance = Player.objects.get(pk=pk)
             serializer = self.serializer_class(instance, data=request.data, partial=True)
 
