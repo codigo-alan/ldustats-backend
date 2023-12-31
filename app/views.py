@@ -15,17 +15,18 @@ logger = logging.getLogger(__name__)
 class TeamView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = TeamSerializer
-    queryset = Team.objects.all().order_by('name')
+    queryset = Team.objects.all().order_by('id')
 
 class PlayerView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = PlayerSerializer
+    queryset = Player.objects.all().order_by('name')
 
-    def get_queryset(self):
+    """ def get_queryset(self):
         #print(self.action)
-        teamParam = self.request.query_params.get('teamParam') 
-        queryset = Player.objects.filter(team= teamParam).order_by('name')
-        return queryset
+        #teamParam = self.request.query_params.get('teamParam') 
+        queryset = Player.objects.all().order_by('name')
+        return queryset """
    
     def retrieve(self, request, pk=None):
         try:
