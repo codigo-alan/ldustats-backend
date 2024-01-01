@@ -21,6 +21,7 @@ class Player(models.Model):
 class File(models.Model):
     #id = models.CharField(max_length=20, primary_key=True)
     date = models.DateField()
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.id}"
