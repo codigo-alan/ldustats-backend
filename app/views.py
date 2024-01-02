@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .serializer import PlayerSerializer, SessionSerializer, FileSerializer, CustomObtainPairSerializer
-from .models import Player, Session, File
+from .serializer import TeamSerializer, PlayerSerializer, SessionSerializer, FileSerializer, CustomObtainPairSerializer
+from .models import Team, Player, Session, File
 import logging
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,11 +12,52 @@ from django.db import models
 
 logger = logging.getLogger(__name__)
 
-# Create your views here.
+class TeamView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TeamSerializer
+    queryset = Team.objects.all().order_by('id')
+
 class PlayerView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = PlayerSerializer
-    queryset = Player.objects.all()
+    queryset = Player.objects.all().order_by('name')
+
+    """ def get_queryset(self):
+        #print(self.action)
+        #teamParam = self.request.query_params.get('teamParam') 
+        queryset = Player.objects.all().order_by('name')
+        return queryset """
+   
+    def retrieve(self, request, pk=None):
+        try:
+            instance = Player.objects.get(pk=pk)
+            serializer = self.serializer_class(instance)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Player.DoesNotExist:
+            return Response({'detail': 'Player not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+    def destroy(self, request, pk=None):
+        try:
+            instance = Player.objects.get(pk=pk)
+            instance.delete()
+            return Response({'detail': 'Player deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+        except Player.DoesNotExist:
+            return Response({'detail': 'Player not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    def update(self, request, pk=None):
+        try:
+            #request.data["team"] = request.data["team"].lower() # convert to lower the team
+            instance = Player.objects.get(pk=pk)
+            serializer = self.serializer_class(instance, data=request.data, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+        except Player.DoesNotExist:
+            return Response({'detail': 'Player not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 class FileView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

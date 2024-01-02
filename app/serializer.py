@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Player, File, Session
+from .models import Player, File, Session, Team
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -13,6 +13,10 @@ class CustomObtainPairSerializer(TokenObtainPairSerializer):
         data['isSuperuser'] = self.user.is_superuser
         return data
     
+class TeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = '__all__'
 
 class PlayerSerializer(serializers.ModelSerializer):
     #sessions = serializers.PrimaryKeyRelatedField(many=True, queryset=Session.objects.all())

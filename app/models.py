@@ -2,11 +2,18 @@ from django.db import models
 
 # Create your models here.
 
+class Team(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self) -> str:
+        return f"Team({self.id}, {self.name})"
+
 class Player(models.Model):
     ref = models.CharField(max_length=20)
     name = models.CharField(max_length=200)
     birth = models.DateField()
     position = models.CharField(max_length=200)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return f"{self.id}"
@@ -14,6 +21,7 @@ class Player(models.Model):
 class File(models.Model):
     #id = models.CharField(max_length=20, primary_key=True)
     date = models.DateField()
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.id}"
