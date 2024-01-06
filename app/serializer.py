@@ -39,10 +39,8 @@ class SessionSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(
-        required=True)
-    password = serializers.CharField(
-        min_length=8)
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(min_length=8, required=True)
     
     """ def validate_password(self, value):
         return make_password(value) """
