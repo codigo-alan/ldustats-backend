@@ -42,8 +42,9 @@ class UserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(min_length=8, required=True)
     
-    """ def validate_password(self, value):
-        return make_password(value) """
+    def create(self):
+        user = get_user_model().objects.create_user(username= self.validated_data['username'], password= self.validated_data['password'])
+        return user
 
     class Meta:
         model = get_user_model() #get user model obtains the model default of User from Django

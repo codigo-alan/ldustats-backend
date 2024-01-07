@@ -123,16 +123,23 @@ class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
-    def create(self,request):
-        print('desde create')
+    def create(self, request):
         serializer = self.serializer_class(data = request.data)
-        print(request.data)
         if serializer.is_valid():
-            print('valido')
-            serializer.save()
+            createdUser = serializer.create()
+            return Response({"message": "Usuario registrado exitosamente", "user": createdUser}, status=status.HTTP_201_CREATED)
+        return Response({"message": "Todos los campos son obligatorios", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+    """ def create(self,request):
+        serializer = self.serializer_class(data = request.data)
+        if serializer.is_valid():
+            usernameValidated = serializer.validated_data['username']
+            passwordValidated = serializer.validated_data['password']
+            User.objects.create_user(username=usernameValidated, password=passwordValidated)
             return Response({"mensaje": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
         return Response({"mensaje": "Todos los campos son obligatorios", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
+ """
 
     """ def create(self):
         # obtain the data from the request
