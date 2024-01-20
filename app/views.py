@@ -142,6 +142,7 @@ class HistoricalInfoView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+
         refParam = self.request.query_params.get('refParam', None)
         
         if refParam is not None:
@@ -160,9 +161,6 @@ class HistoricalInfoView(APIView):
 
                 maxDec = sessionsFiltered.aggregate(max_dec=models.Max('decelerations'))['max_dec']
 
-            except:
-                return Response({"message": f"Player without sessions"}, status=status.HTTP_204_NO_CONTENT)
-            else:
                 return Response(
                 {"maxSpeed": f"{maxSpeedPlayer} km/h", 
                  "totalDistance": f"{maxDistancePlayer} m", 
@@ -170,5 +168,8 @@ class HistoricalInfoView(APIView):
                  "sprintsDistance": f"{maxSprintsDistancePlayer} m",
                  "maxAcc": f"{maxAcc}",
                  "maxDec": f"{maxDec}"}, status=status.HTTP_200_OK)
+
+            except:
+                return Response({"message": f"Player without sessions"}, status=status.HTTP_204_NO_CONTENT)
             
         else: return Response({"message": f"GET request SIN parámetro {refParam}"}, status=status.HTTP_400_BAD_REQUEST)
