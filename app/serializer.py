@@ -39,13 +39,25 @@ class SessionSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(
-        required=True)
-    password = serializers.CharField(
-        min_length=8)
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(min_length=8, required=True)
+    isStaff = serializers.BooleanField(default=False)
+
+    def validate_username(self, value):
+        if any(char.isdigit() for char in value):
+            raise serializers.ValidationError('El nombre no debe contener números')
+        return value
     
-    """ def validate_password(self, value):
-        return make_password(value) """
+    def validate_password(self, value):
+        if not any(char.isdigit() for char in value) or not any(char.isalpha() for char in value):
+            raise serializers.ValidationError('La contraseña debe contaner letras y números')
+        
+        if not any(char.isupper() for char in value) or not any(char.islower() for char in value):
+            raise serializers.ValidationError('La contraseña debe contener mayúsculas y minúsculas')
+        
+        if all(char.isalnum() for char in value):
+            raise serializers.ValidationError('La contraseña debe contener algún caracter especial')
+        return value
 
     class Meta:
         model = get_user_model() #get user model obtains the model default of User from Django

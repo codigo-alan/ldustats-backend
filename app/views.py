@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from .serializer import TeamSerializer, PlayerSerializer, SessionSerializer, FileSerializer, CustomObtainPairSerializer
+from .serializer import TeamSerializer, PlayerSerializer, SessionSerializer, FileSerializer, CustomObtainPairSerializer, UserSerializer
 from .models import Team, Player, Session, File
 import logging
 from rest_framework.response import Response
@@ -118,29 +118,21 @@ class SessionIntervalsView(viewsets.ModelViewSet):
         endDateParam = self.request.query_params.get('endDate')
         return Session.objects.filter(name__iexact=nameParam, date__gte= initDateParam, date__lte= endDateParam).order_by('date')
 
-class RegisterUserView(viewsets.ModelViewSet):
-    permission_classes = [IsAdminUser]  # Allow access without authentication
+class UserView(viewsets.ModelViewSet):
+    permission_classes = [IsAdminUser]
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
 
-    def post(self):
-        # obtain the data from the request
-        username = self.request.query_params.get('username', None)
-        email = self.request.query_params.get('email', None)
-        password = self.request.query_params.get('password', None)
-        
-
-        # Validate data
-
-        if not username or not email or not password:
-            return Response({"mensaje": "Todos los campos son obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Create new user in db
-        try:
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.save()
-            #TODO here is neccessary make a LOGIN of the recently added User
-            return Response({"mensaje": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response({"mensaje": "Error al registrar el usuario"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    def create(self, request):
+        serializer = self.serializer_class(data = request.data)
+        if serializer.is_valid():
+            createdUser = User.objects.create_user(
+                username= serializer.validated_data['username'],
+                password= serializer.validated_data['password'],
+                is_staff= serializer.validated_data['isStaff'],
+            )
+            return Response({"message": "Usuario registrado exitosamente", "user": createdUser.username}, status=status.HTTP_201_CREATED)
+        return Response({"message": "No se pudo crear el usuario", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = [AllowAny]
